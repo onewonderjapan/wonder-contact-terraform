@@ -1,0 +1,10 @@
+{
+    "sender_email": "info@onewonder.co.jp",
+    "recipient_email": "xingran.wang@onewonder.co.jp",
+    "cc_emails": [],
+    "bcc_emails": [],
+    "email_subjects": {
+      "individual": "個人からのお問い合わせ",
+      "corporate": "法人からのお問い合わせ"
+    }
+  }
