@@ -1,6 +1,6 @@
 # OneWonder Contact Form Infrastructure
 
-この Terraform プロジェクトは、OneWonder のお問い合わせフォームの AWS インフラストラクチャを管理するためのもので、API Gateway、Lambdaを含みます。
+この Terraform プロジェクトは、OneWonder のお問い合わせフォームの AWS インフラストラクチャを管理するためのもので、API Gateway、Lambda を含みます。
 
 ## プロジェクト構造
 

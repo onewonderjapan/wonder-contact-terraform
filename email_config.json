@@ -1,7 +1,7 @@
 {
     "sender_email": "info@onewonder.co.jp",
     "recipient_email": "inje.sai@onewonder.co.jp",
-    "automatically sender_email": "inje.sai@onewonder.co.jp",
+    "automatically_sender_email": "inje.sai@onewonder.co.jp",
     "cc_emails": [],
     "bcc_emails": []
   }
