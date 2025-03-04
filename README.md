@@ -1,89 +1,97 @@
 # OneWonder Contact Form Infrastructure
 
-这个Terraform项目用于管理OneWonder联系表单的AWS基础设施，包括API Gateway、Lambda和SES配置。
+この Terraform プロジェクトは、OneWonder のお問い合わせフォームの AWS インフラストラクチャを管理するためのもので、API Gateway、Lambda、SES 設定を含みます。
 
 ## 项目结构
 
 ```
 onewonder-contact-terraform/
-├── main.tf               # 主Terraform配置文件
-├── variables.tf          # 变量定义
-├── outputs.tf            # 输出配置
-├── email_config.json     # 邮箱配置JSON文件
-├── lambda_function.py    # Lambda函数代码
-├── package_lambda.sh     # Lambda打包脚本
-└── README.md             # 项目说明文件
+├── main.tf               # メインTerraform設定ファイル
+├── variables.tf          # 変数定義
+├── outputs.tf            # 出力設定
+├── email_config.json     # メール設定JSONファイル
+├── lambda_function.py    # Lambda関数コード
+├── package_lambda.sh     # Lambdaパッケージングスクリプト
+└── README.md             # プロジェクト説明ファイル
 ```
 
 ## 功能特点
 
-- 使用JSON文件管理邮箱配置
-- 完整的API Gateway设置，包括CORS支持
-- Lambda函数自动将JSON配置转换为环境变量
-- SES邮箱验证自动化
-- 完整的IAM权限配置
+- JSON ファイルによるメール設定の管理
+- CORS サポートを含む完全な API Gateway 設定
+- Lambda 関数が JSON 設定を環境変数に自動変換
+- 完全な IAM 権限設定
 
 ## 使用方法
 
 ### 前提条件
 
-1. 安装Terraform (v1.6.6)
-2. 配置AWS认证凭证
-3. 准备好域名的DNS访问权限（用于邮件安全配置）
+1. Terraform のインストール (v1.6.6)
+2. AWS 認証情報の設定
+3. ドメイン名の DNS アクセス権限（メールセキュリティ設定用）
 
 ### 部署步骤
 
-1. 克隆仓库
+1. リポジトリをクローン
+
    ```
-   git clone [仓库URL]
+   git clone [リポジトリURL]
    cd onewonder-contact-terraform
    ```
 
-2. 更新邮箱配置
+2. メール設定の更新
+
    ```
-   # 编辑email_config.json文件，设置正确的发件人和收件人邮箱
+   # email_config.jsonファイルを編集し、正しい送信者と受信者のメールアドレスを設定
    ```
 
-3. 创建Lambda部署包
+3. Lambda デプロイパッケージの作成
+
    ```
-ワークフローでzipにする自動に更新
+   ワークフローでpyファイルをzipにする
    ```
 
-4. 初始化Terraform
+4. Terraform の初期化
+
    ```
    terraform init
    ```
 
-5. 生成执行计划
+5. 実行計画の生成
+
    ```
    terraform plan
    ```
 
-6. 应用配置
+6. 設定の適用
+
    ```
    terraform apply
    ```
 
-7. 确认部署
+7. デプロイの確認
    ```
-   # 查看输出中的API Gateway URL和其他资源信息
-   terraform output
+   　# 出力から API Gateway URL とその他のリソース情報を確認
+    terraform output
    ```
 
 ## API Gateway URL
 
-部署完成后，您将获得一个API Gateway端点URL，格式类似于：
-```
-https://xxxxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/prod/contact
+デプロイ完了後、以下のような形式の API Gateway エンドポイント URL が提供されます：
+
 ```
 
-将此URL更新到前端代码中的fetch请求中：
+https://xxxxxxxxxxxx.execute-api.ap-northeast-1.amazonaws.com/prod/contact
+
+```
+
+この URL をフロントエンドコードの fetch リクエストに更新してください：
 
 ```javascript
-const response = await fetch('YOUR_API_GATEWAY_URL', {
-  method: 'POST',
+const response = await fetch("YOUR_API_GATEWAY_URL", {
+  method: "POST",
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
   body: JSON.stringify(formDataObj),
 });
