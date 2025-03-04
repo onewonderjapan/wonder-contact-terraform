@@ -1,6 +1,7 @@
 import json
 import boto3
 import logging
+import os
 from botocore.exceptions import ClientError
 
 # 設置日志
@@ -9,6 +10,11 @@ logger.setLevel(logging.INFO)
 
 # 初始化SES客户端
 ses = boto3.client("ses", region_name="ap-northeast-1")
+
+# 获取环境变量
+EMAIL_CONFIG = json.loads(os.environ.get('EMAIL_CONFIG', '{}'))
+RECIPIENT_EMAIL = os.environ.get('RECIPIENT_EMAIL', '')
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL', '')
 
 
 def lambda_handler(event, context):
@@ -19,15 +25,20 @@ def lambda_handler(event, context):
 
         # 确定主题基于表单类型
         form_type = body.get("formType", "")
+        
+        # 根据表单类型设置邮件主题
+        if form_type in EMAIL_CONFIG.get('email_subjects', {}):
+            subject = EMAIL_CONFIG['email_subjects'][form_type]
+        else:
+            subject = "お問い合わせ"
+            
         if form_type == "individual":
-            subject = "個人からのお問い合わせ"
             # 获取个人问询者的邮箱和名字
             inquirer_email = body.get("メール", "")
             inquirer_name = body.get("氏名", "")
             # 称呼
             greeting = f"{inquirer_name} 様"
         else:
-            subject = "法人からのお問い合わせ"
             # 获取企业问询者的邮箱、公司名和担当者
             inquirer_email = body.get("メール", "")
             company_name = body.get("会社名", "")
@@ -45,9 +56,9 @@ def lambda_handler(event, context):
 
         # 设置SES参数（发送给公司）
         params = {
-            "Source": "info@onewonder.co.jp",  # 发件人地址
+            "Source": SENDER_EMAIL,  # 发件人地址
             "Destination": {
-                "ToAddresses": ["inje.sai@onewonder.co.jp"],  # 收件人地址
+                "ToAddresses": [RECIPIENT_EMAIL],  # 收件人地址
             },
             "Message": {
                 "Subject": {
@@ -62,6 +73,14 @@ def lambda_handler(event, context):
                 },
             },
         }
+
+        # 如果有配置抄送地址
+        if 'cc_emails' in EMAIL_CONFIG and EMAIL_CONFIG['cc_emails']:
+            params["Destination"]["CcAddresses"] = EMAIL_CONFIG['cc_emails']
+
+        # 如果有配置密送地址
+        if 'bcc_emails' in EMAIL_CONFIG and EMAIL_CONFIG['bcc_emails']:
+            params["Destination"]["BccAddresses"] = EMAIL_CONFIG['bcc_emails']
 
         # 发送邮件给公司
         response = ses.send_email(**params)
@@ -85,7 +104,7 @@ def lambda_handler(event, context):
 
             # 设置SES参数（发送给问い合わせ人）
             auto_reply_params = {
-                "Source": "inje.sai@onewonder.co.jp",  # 发件人地址（公司邮箱）
+                "Source": AUTOMATICALLY_SENDER_EMAIL,  # 发件人地址
                 "Destination": {
                     "ToAddresses": [inquirer_email],  # 收件人地址（问い合わせ人的邮箱）
                 },

@@ -70,7 +70,7 @@ resource "aws_lambda_function" "contact_form" {
     variables = {
       SENDER_EMAIL    = local.email_config.sender_email
       RECIPIENT_EMAIL = local.email_config.recipient_email
-      EMAIL_CONFIG    = jsonencode(local.email_config)
+      AUTOMATICALLY_SENDER_EMAIL    = local.email_config.automatically_sender_email
     }
   }
 
