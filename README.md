@@ -1,8 +1,8 @@
 # OneWonder Contact Form Infrastructure
 
-この Terraform プロジェクトは、OneWonder のお問い合わせフォームの AWS インフラストラクチャを管理するためのもので、API Gateway、Lambda、SES 設定を含みます。
+この Terraform プロジェクトは、OneWonder のお問い合わせフォームの AWS インフラストラクチャを管理するためのもので、API Gateway、Lambdaを含みます。
 
-## 项目结构
+## プロジェクト構造
 
 ```
 onewonder-contact-terraform/
@@ -15,7 +15,7 @@ onewonder-contact-terraform/
 └── README.md             # プロジェクト説明ファイル
 ```
 
-## 功能特点
+## 機能特徴
 
 - JSON ファイルによるメール設定の管理
 - CORS サポートを含む完全な API Gateway 設定
@@ -30,7 +30,7 @@ onewonder-contact-terraform/
 2. AWS 認証情報の設定
 3. ドメイン名の DNS アクセス権限（メールセキュリティ設定用）
 
-### 部署步骤
+### デプロイ手順
 
 1. リポジトリをクローン
 
