@@ -1,5 +1,14 @@
-# OneWonder Contact Form Infrastructure
+<img src="image/logo.jpg" alt="公司 Logo" style="width: 100%; display: block;">
 
+- [OneWonder](https://next.onewonder.co.jp/) はクラウドコンピューティングに特化したサービスを提供しています
+## 使用技術一覧
+
+<img src="https://img.shields.io/badge/-Microsoft-666666.svg?logo=python&style=popout">
+<img src="https://img.shields.io/badge/-Amazon%20aws-232F3E.svg?logo=amazon-aws&style=popout">
+
+## プロジェクト名
+OneWonder Contact Form Infrastructure
+## プロジェクト概要
 この Terraform プロジェクトは、OneWonder のお問い合わせフォームの AWS インフラストラクチャを管理するためのもので、API Gateway、Lambda を含みます。
 
 ## システム構成図
