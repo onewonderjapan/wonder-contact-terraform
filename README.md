@@ -7,7 +7,7 @@
 <img src="https://img.shields.io/badge/-Amazon%20aws-232F3E.svg?logo=amazon-aws&style=popout">
 
 ## プロジェクト名
-OneWonder Contact Form Infrastructure
+wonder-contact-terraform
 ## プロジェクト概要
 この Terraform プロジェクトは、OneWonder のお問い合わせフォームの AWS インフラストラクチャを管理するためのもので、API Gateway、Lambda を含みます。
 
