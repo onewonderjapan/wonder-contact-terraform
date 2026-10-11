@@ -176,3 +176,10 @@ flowchart TD
 - フロントエンドのCORS設定を確認すること
 - SESはデフォルトでサンドボックス環境のため、検証済みメールアドレスのみに送信可能
 - APIエンドポイントのセキュリティを確保するため、適切な認証を検討すること
+
+
+## Contact contract review
+
+Offline validation: `python3 -X utf8 -m unittest discover -s tests -v`. Tests inject a fake SES client; they do not submit forms, send mail or require AWS credentials. The implementation supplies the existing sender fallback and redacts untrusted form/provider exception contents from logs. Existing public payload keys and Japanese auto-replies remain.
+
+Pull requests run only the offline contract job. The existing Terraform/AWS job is restricted to a push on `main`; opening or updating a draft PR cannot run it. This branch does not authorize merging or deployment. Before any release, compare the real Lambda version/configuration and verify the actual payload, duplicate-send and delivery contracts with the service owner.
