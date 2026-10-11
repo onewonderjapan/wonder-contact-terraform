@@ -15,23 +15,27 @@ ses = boto3.client("ses", region_name="ap-northeast-1")
 EMAIL_CONFIG = json.loads(os.environ.get('EMAIL_CONFIG', '{}'))
 RECIPIENT_EMAIL = os.environ.get('RECIPIENT_EMAIL', '')
 SENDER_EMAIL = os.environ.get('SENDER_EMAIL', '')
+AUTOMATICALLY_SENDER_EMAIL = os.environ.get('AUTOMATICALLY_SENDER_EMAIL', SENDER_EMAIL)
 
 
 def lambda_handler(event, context):
     try:
         # 解析请求体
         body = json.loads(event.get("body", "{}"))
-        logger.info(f"Received form data: {body}")
+        logged_form_type = body.get("formType")
+        if logged_form_type not in ("corporate", "individual"):
+            logged_form_type = "unknown"
+        logger.info("Received contact request; formType=%s", logged_form_type)
 
         # 确定主题基于表单类型
         form_type = body.get("formType", "")
-        
+
         # 根据表单类型设置邮件主题
         if form_type in EMAIL_CONFIG.get('email_subjects', {}):
             subject = EMAIL_CONFIG['email_subjects'][form_type]
         else:
             subject = "お問い合わせ"
-            
+
         if form_type == "individual":
             # 获取个人问询者的邮箱和名字
             inquirer_email = body.get("メール", "")
@@ -145,7 +149,8 @@ def lambda_handler(event, context):
         }
 
     except ClientError as e:
-        logger.error(f"Email sending error: {e.response['Error']['Message']}")
+        # Provider messages can echo an inquirer's address; keep logs content-free.
+        logger.error("Contact email sending failed")
         return {
             "statusCode": 500,
             "headers": {
@@ -162,7 +167,7 @@ def lambda_handler(event, context):
         }
 
     except Exception as e:
-        logger.error(f"Error processing request: {str(e)}")
+        logger.error("Contact request processing failed")
         return {
             "statusCode": 500,
             "headers": {
