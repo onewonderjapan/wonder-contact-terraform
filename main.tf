@@ -194,13 +194,17 @@ resource "aws_api_gateway_stage" "prod" {
   deployment_id = aws_api_gateway_deployment.api_deployment.id
   rest_api_id   = aws_api_gateway_rest_api.contact_api.id
   stage_name    = "prod"
+}
 
-  # 2026-10 脆弱性診断 S04 対応：無制限な問い合わせ POST による
-  # SES 費用の増大・メール爆撃・自動返信の第三者宛滥発を防ぐため、
-  # stage 単位のスロットリングを設定（正常人間の入力には余裕のある値）。
-  method_settings {
-    path_part   = "/contact"
-    http_method = "POST"
+# 2026-10 脆弱性診断 S04 対応：無制限な問い合わせ POST による
+# SES 費用の増大・メール爆撃・自動返信の第三者宛滥発を防ぐため、
+# POST /contact にスロットリングを設定（正常人間の入力には余裕のある値）。
+resource "aws_api_gateway_method_settings" "prod_contact_throttle" {
+  rest_api_id = aws_api_gateway_rest_api.contact_api.id
+  stage_name  = aws_api_gateway_stage.prod.stage_name
+  method_path = "${aws_api_gateway_resource.contact.path_part}/POST"
+
+  settings {
     throttling_rate_limit  = 2
     throttling_burst_limit = 4
   }
